@@ -1,0 +1,202 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: en-US
+branch: main
+nodes_managed: true
+exported_at: "2026-08-28T01:02:58Z"
+modules:
+    "":
+        dir_name: Daily Stock Analysis System (Root)
+        title: Daily Stock Analysis System (Root)
+        scope:
+            - README.md
+            - .gitignore
+            - main.py
+            - server.py
+            - webui.py
+            - pyproject.toml
+            - requirements.txt
+            - setup.cfg
+            - .dockerignore
+            - .gitattributes
+            - AGENTS.md
+            - CLAUDE.md
+            - LICENSE
+            - SKILL.md
+            - THIRD_PARTY_NOTICES.md
+        source_files: []
+        children:
+            - api_server
+            - chat_bot
+            - claude_skills
+            - core_engine
+            - data_providers
+            - docker_packaging
+            - docs
+            - github_ci
+            - scripts_and_tools
+            - strategies
+            - templates
+            - tests
+        depends_on: []
+        related_to: []
+    api_server:
+        dir_name: FastAPI REST API Server (v1)
+        title: FastAPI REST API Server (v1)
+        scope:
+            - api/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: core_engine/top_level_app
+            - path: docker_packaging
+    chat_bot:
+        dir_name: Multi-Platform Stock Analysis Chat Bot
+        title: Multi-Platform Stock Analysis Chat Bot
+        scope:
+            - bot/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: data_providers
+    claude_skills:
+        dir_name: Claude Code Skills for Issue & PR Workflow
+        title: Claude Code Skills for Issue & PR Workflow
+        scope:
+            - .claude/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    core_engine:
+        dir_name: Daily Stock Analysis Core Engine
+        title: Daily Stock Analysis Core Engine
+        scope:
+            - src/
+        source_files: []
+        children:
+            - core_engine/top_level_app
+        depends_on: []
+        related_to: []
+    core_engine/top_level_app:
+        dir_name: Top-Level Application Core (Config, Scheduling, Auth, Storage, Analysis & Notifi
+        title: Top-Level Application Core (Config, Scheduling, Auth, Storage, Analysis & Notification)
+        scope:
+            - src/auth.py
+            - src/config.py
+            - src/scheduler.py
+            - src/storage.py
+            - src/logging_config.py
+            - src/enums.py
+            - src/formatters.py
+            - src/report_language.py
+            - src/search_service.py
+            - src/notification.py
+            - src/notification_capabilities.py
+            - src/notification_contracts.py
+            - src/notification_noise.py
+            - src/notification_routing.py
+            - src/market_analyzer.py
+            - src/stock_analyzer.py
+            - src/analyzer.py
+            - src/analysis_context_pack_overview.py
+            - src/analysis_context_pack_prompt.py
+            - src/daily_market_context_guardrail.py
+            - src/market_context.py
+            - src/market_phase_prompt.py
+            - src/market_phase_summary.py
+            - src/market_structure_prompt.py
+            - src/phase_decision_guardrail.py
+            - src/feishu_doc.py
+            - src/md2img.py
+            - src/share_image.py
+            - src/webui_frontend.py
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: api_server
+    data_providers:
+        dir_name: Multi-Provider Data Fetching & Strategy Manager
+        title: Multi-Provider Data Fetching & Strategy Manager
+        scope:
+            - data_provider/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: chat_bot
+    docker_packaging:
+        dir_name: Docker Packaging & Container Runtime
+        title: Docker Packaging & Container Runtime
+        scope:
+            - docker/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: api_server
+            - path: github_ci
+            - path: strategies
+    docs:
+        dir_name: Project Documentation & User Guides
+        title: Project Documentation & User Guides
+        scope:
+            - docs/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    github_ci:
+        dir_name: GitHub CI_CD & Automation Workflows
+        title: GitHub CI/CD & Automation Workflows
+        scope:
+            - .github/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: docker_packaging
+            - path: scripts_and_tools
+    scripts_and_tools:
+        dir_name: Build, CI Gate & Data Seed Scripts
+        title: Build, CI Gate & Data Seed Scripts
+        scope:
+            - scripts/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: github_ci
+            - path: tests
+    strategies:
+        dir_name: Trading Strategy Skills (YAML Definitions)
+        title: Trading Strategy Skills (YAML Definitions)
+        scope:
+            - strategies/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: docker_packaging
+    templates:
+        dir_name: Stock Report Jinja2 Templates
+        title: Stock Report Jinja2 Templates
+        scope:
+            - templates/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    tests:
+        dir_name: Pytest Test Suite for DailyStockAnalysis
+        title: Pytest Test Suite for DailyStockAnalysis
+        scope:
+            - tests/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: scripts_and_tools

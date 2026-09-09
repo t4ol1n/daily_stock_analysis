@@ -1,0 +1,4 @@
+- Each major guide has parallel English and Simplified/Traditional Chinese variants suffixed with `_EN.md` or `_CHT.md` (e.g., `README_EN.md`, `full-guide_EN.md`, `INDEX_EN.md`).
+- Cross-references between docs use relative Markdown links anchored at `./` within the `docs/` directory rather than absolute URLs.
+- Screenshots and diagrams are stored under `assets/` (or `assets/bot/`) and referenced via relative paths inside the Markdown that describes the UI flow.
+- Topic-specific subfolders group related assets and docs together (e.g., `bot/` for IM-bot setup, `docker/` for cloud deployment notes, `examples/` for sample configs).

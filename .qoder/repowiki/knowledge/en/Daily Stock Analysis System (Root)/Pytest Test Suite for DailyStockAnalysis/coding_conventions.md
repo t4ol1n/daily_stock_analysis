@@ -1,0 +1,6 @@
+- Each source module has a dedicated `test_<module>.py` file under `tests/` named after the module it exercises, keeping one concern per test file.
+- Tests construct lightweight `SimpleNamespace` config objects instead of full Pydantic/config models when only a few fields are needed, reducing boilerplate.
+- External or heavyweight dependencies (LiteLLM, network fetchers) are isolated via `unittest.mock.patch` / `monkeypatch` rather than real calls, with assertions verifying the mocked boundary behavior.
+- Sensitive data in agent opinions and degraded-stage metadata is asserted to be scrubbed from summary output strings, ensuring secrets never leak into rendered text.
+- Agent-related tests build a `ToolRegistry` with `ToolDefinition` + `ToolPolicy.declared(...)` to declare tool capabilities inline within each test case.
+- Smoke tests for live external services are kept as separate top-level files (e.g., `*_live_smoke.py`) distinct from unit tests, marking them as optional integration checks.

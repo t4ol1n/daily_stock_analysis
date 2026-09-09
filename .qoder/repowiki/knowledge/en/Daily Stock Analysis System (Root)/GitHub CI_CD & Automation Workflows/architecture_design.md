@@ -1,0 +1,8 @@
+The module is organized as a flat `.github/` configuration tree consumed by GitHub Actions:
+- `workflows/` contains all pipeline definitions: `ci.yml` (PR-triggered change detection via `dorny/paths-filter`, sharded backend tests, Docker build, Windows/macOS desktop packaging, web gate), `create-release.yml` (annotated-tag-driven release creation), `docker-publish.yml` (GHCR + optional Docker Hub multi-platform publish with metadata tagging), plus auxiliary flows (`auto-tag`, `desktop-release`, `ghcr-dockerhub`, `network-smoke`, `pr-review`, `stale`).
+- `scripts/` holds reusable Python helpers invoked from workflows: `ai_review.py` (pulls PR diffs via Git or GitHub API, classifies changed files, builds a structured prompt, calls Gemini first then OpenAI-compatible fallback, writes results to `GITHUB_STEP_SUMMARY` and `ai_review_result.txt`) and `build_release_notes.py` (extracts changelog highlights, contributors, and compare links for release bodies).
+- `instructions/*.instructions.md` provide path-scoped guidance consumed by AI tools; `copilot-instructions.md` is the canonical Copilot entrypoint pointing to `AGENTS.md`.
+- `ISSUE_TEMPLATE/` defines bug report and feature request templates with a `config.yml`; `PULL_REQUEST_TEMPLATE.md` and `CODEOWNERS` define PR authoring conventions and ownership.
+- `release.yml` configures GitHub's built-in changelog generator categories and exclusions.
+- Dependency manifests `requirements-ci.txt` pins CI-only packages (e.g. pytest-timeout) shared across workflows, and `ci-test-durations.json` feeds shard balancing.
+Dependency direction is one-way: workflows call into `scripts/` and external actions; no workflow imports another YAML file — each job is self-contained and communicates via `needs` and `outputs`.

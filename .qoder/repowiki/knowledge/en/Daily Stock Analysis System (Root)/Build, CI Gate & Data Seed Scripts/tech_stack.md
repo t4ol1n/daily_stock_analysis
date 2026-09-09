@@ -1,0 +1,1 @@
+PyInstaller (onedir, noconsole) for backend desktop packaging with a custom `pyinstaller_runtime_compat.py` runtime hook; pytest with `pytest-timeout` and a custom sharder (`ci_test_shard.py`) driven by `.github/ci-test-durations.json`; akshare/yfinance/Tushare for market data; Gemini API for LLM probes; pypinyin for Chinese pinyin index generation.

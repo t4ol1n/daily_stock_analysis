@@ -1,0 +1,1 @@
+FastAPI + Starlette (with `BaseHTTPMiddleware`, `StaticFiles`, `StreamingResponse`), Pydantic v2 models for request/response validation, SQLAlchemy sessions via a `DatabaseManager` singleton, and optional admin session cookie authentication backed by `src.auth`.

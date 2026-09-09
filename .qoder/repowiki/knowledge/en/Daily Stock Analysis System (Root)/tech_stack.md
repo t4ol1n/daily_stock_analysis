@@ -1,0 +1,1 @@
+Python 3.10–3.12 with FastAPI + Uvicorn for the API/Web UI, dotenv for configuration, Jinja2 for report templates, pytest for testing, and Docker Compose for containerized deployment; code style enforced by Black/isort/bandit via `pyproject.toml`.

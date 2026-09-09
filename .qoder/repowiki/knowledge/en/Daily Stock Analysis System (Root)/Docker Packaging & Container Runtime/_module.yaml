@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: docker_packaging
+title: Docker Packaging & Container Runtime
+scope:
+    - docker/
+source_files: []
+depends_on: []
+related_to:
+    - path: api_server
+    - path: github_ci
+    - path: strategies

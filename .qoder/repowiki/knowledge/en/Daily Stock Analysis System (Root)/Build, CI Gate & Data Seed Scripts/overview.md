@@ -1,0 +1,1 @@
+Cross-platform build, CI gate, test runner, environment diagnostics, and stock/index seed generation scripts that orchestrate the backend desktop packaging and offline verification of the stock analysis system.

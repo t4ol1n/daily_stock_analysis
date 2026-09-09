@@ -1,0 +1,1 @@
+Claude Code skills format (`SKILL.md`) combined with the GitHub CLI (`gh`) for remote state access; outputs written as Markdown under `.claude/reviews/`.

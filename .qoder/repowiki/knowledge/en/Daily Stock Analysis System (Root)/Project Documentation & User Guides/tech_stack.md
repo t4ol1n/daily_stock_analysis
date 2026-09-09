@@ -1,0 +1,1 @@
+Markdown documentation with embedded HTML tables and images; OpenAPI spec in `architecture/api_spec.json`; icon generation via `assets/dsa_vi/gen_icons.py`.

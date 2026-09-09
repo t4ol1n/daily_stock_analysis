@@ -1,0 +1,1 @@
+Defines GitHub Actions workflows, PR templates, release automation, Docker publishing, AI-assisted code review, and CI governance scripts for the project.

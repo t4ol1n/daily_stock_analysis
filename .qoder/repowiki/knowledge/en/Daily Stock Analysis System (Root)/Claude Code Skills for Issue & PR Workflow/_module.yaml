@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: claude_skills
+title: Claude Code Skills for Issue & PR Workflow
+scope:
+    - .claude/
+source_files: []
+depends_on: []
+related_to: []

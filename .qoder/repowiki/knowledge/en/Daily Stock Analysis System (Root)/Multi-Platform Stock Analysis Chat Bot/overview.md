@@ -1,0 +1,1 @@
+Pluggable chat-bot framework that receives webhook/stream messages from DingTalk, Feishu, Discord and others, parses them into a unified model, and dispatches stock-analysis commands via an LLM-backed natural-language router.

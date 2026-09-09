@@ -1,0 +1,1 @@
+Natural-language trading strategy definitions stored as YAML files that the system auto-loads at startup to provide reusable, composable stock analysis skills.

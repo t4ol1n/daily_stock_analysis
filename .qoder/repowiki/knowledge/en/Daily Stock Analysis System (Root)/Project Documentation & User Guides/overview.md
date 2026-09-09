@@ -1,0 +1,1 @@
+Multilingual documentation, deployment guides, screenshots, and reference assets for the Daily Stock Analysis project, organized by topic and user scenario.

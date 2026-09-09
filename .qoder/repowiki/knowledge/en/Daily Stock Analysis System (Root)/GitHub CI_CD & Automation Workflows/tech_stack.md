@@ -1,0 +1,1 @@
+GitHub Actions (actions/checkout@v5, setup-python@v6, setup-node@v6, dorny/paths-filter@v3, docker/build-push-action@v5/v6, docker/metadata-action@v5, softprops/action-gh-release@v2); Python 3.11/3.12 toolchains; Node 20 for frontend; Gemini (`google-genai`) and OpenAI-compatible APIs for AI PR review; Docker Buildx for multi-arch images pushed to GHCR and optionally Docker Hub.

@@ -1,0 +1,6 @@
+- Each domain endpoint is a separate module under `api/v1/endpoints/` that exposes a module-level `router = APIRouter()` instance, which is mounted centrally in `api/v1/router.py` with a consistent prefix and OpenAPI tag.
+- Request bodies and responses are declared as Pydantic `BaseModel` classes colocated with or referenced from the endpoint module, and endpoints return those models directly so FastAPI handles serialization and schema generation.
+- Long-running or blocking work inside async endpoints is offloaded to the event loop using `asyncio.to_thread` / `loop.run_in_executor` before invoking sync business logic.
+- Shared services are obtained through `Depends(get_xxx)` factories in `api/deps.py` rather than imported directly in endpoint functions, keeping lifecycle and instantiation centralized.
+- Cross-cutting behavior (authentication, error formatting) is implemented as FastAPI middleware added once in `create_app()`, with explicit exempt paths rather than per-endpoint guards.
+- App-wide state (scheduler, system config) is stored on `request.app.state` during lifespan and retrieved lazily via `getattr(request.app.state, ...)` in dependency functions.

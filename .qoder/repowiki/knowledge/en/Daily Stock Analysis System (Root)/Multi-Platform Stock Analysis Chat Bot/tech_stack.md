@@ -1,0 +1,1 @@
+Python asyncio-based bot framework; integrates with external platforms via Webhook and WebSocket stream clients (DingTalk, Feishu); uses an LLM intent router through `src.agent.llm_adapter.LLMToolAdapter` for natural-language-to-command routing; relies on `data_provider.base.canonical_stock_code` and `src.data.stock_mapping.STOCK_NAME_MAP` for stock-code resolution.

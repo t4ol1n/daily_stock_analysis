@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: api_server
+title: FastAPI REST API Server (v1)
+scope:
+    - api/
+source_files: []
+depends_on: []
+related_to:
+    - path: core_engine/top_level_app
+    - path: docker_packaging

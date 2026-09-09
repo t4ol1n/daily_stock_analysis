@@ -1,0 +1,9 @@
+schema_version: 1
+module_path: chat_bot
+title: Multi-Platform Stock Analysis Chat Bot
+scope:
+    - bot/
+source_files: []
+depends_on: []
+related_to:
+    - path: data_providers

@@ -1,0 +1,1 @@
+`python main.py` runs the full daily analysis (CLI scheduler); `python main.py --serve` or `uvicorn server:app` starts the FastAPI backend; `python webui.py` or `python main.py --webui-only` launches the Web UI; `python main.py --schedule` enables cron-like daily execution; all modes honor `ENV_FILE`, `USE_PROXY`, `WEBUI_HOST/PORT`, and `STOCK_LIST`.

@@ -1,0 +1,1 @@
+No top-level CLI or Makefile at this scope; the package is imported by the application entry point which loads `config.py`, initializes `storage.py`, registers notification senders, and starts the scheduler.

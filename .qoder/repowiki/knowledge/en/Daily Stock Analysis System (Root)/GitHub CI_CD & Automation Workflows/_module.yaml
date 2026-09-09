@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: github_ci
+title: GitHub CI/CD & Automation Workflows
+scope:
+    - .github/
+source_files: []
+depends_on: []
+related_to:
+    - path: docker_packaging
+    - path: scripts_and_tools

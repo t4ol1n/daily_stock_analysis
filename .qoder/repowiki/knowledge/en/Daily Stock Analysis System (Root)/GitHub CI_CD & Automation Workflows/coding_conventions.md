@@ -1,0 +1,7 @@
+- Workflows declare concurrency groups keyed by PR number or ref and set `cancel-in-progress: true` to avoid redundant runs on the same branch.
+- Change-driven execution uses `dorny/paths-filter@v3` with `predicate-quantifier: every` to compute boolean outputs (`backend`, `frontend`, `docker`, `futu_packaging`) that gate downstream jobs via `if: needs.changes.outputs.X == 'true'`.
+- Reusable CI dependencies are centralized in `.github/requirements-ci.txt` and installed with a 3-attempt retry loop across all workflows that need it.
+- Python steps pin exact versions via `setup-python` with `python-version: '3.11'` (CI/backend) or `'3.12'` (desktop packaging) and enable pip caching through `cache-dependency-path`.
+- Node-based jobs use `setup-node@v6` with `node-version: '20'` and cache `package-lock.json` under `apps/dsa-web/` before running `npm ci`.
+- Scripts communicate results back to the runner via `GITHUB_STEP_SUMMARY` and environment variables rather than exit codes alone, allowing non-blocking warnings in review flows.
+- Release artifacts are versioned using semver tags matched by regex `^v\d+\.\d+\.\d+$` at both trigger and validation points across workflows.

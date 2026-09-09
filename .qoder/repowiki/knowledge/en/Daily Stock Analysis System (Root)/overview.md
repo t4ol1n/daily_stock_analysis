@@ -1,0 +1,1 @@
+Top-level entry point that boots the stock analysis system as a CLI scheduler, FastAPI REST server, Web UI, and multi-platform chat bot, wiring shared config, logging, data providers, core engine, strategies, templates, and packaging.

@@ -1,0 +1,6 @@
+- Each skill is a self-contained directory named after its slash command, containing exactly one `SKILL.md` that defines the full workflow.
+- Every skill begins with a `# Title`, a `**Repository**: https://...` link, a `## Usage` block showing the `/command` invocation, and numbered `### Step N:` sections describing ordered actions.
+- All skills enforce a preflight git sync pattern: run `git status --short`, `git fetch --all --prune`, then only `git pull --ff-only` when the working tree is clean and fast-forward is possible; otherwise fall back to inspecting fetched refs without mutating local state.
+- Mutating operations are explicitly gated behind two sections per skill — `Allowed Auto-Actions (No Confirmation Needed)` for read-only work and `Actions Requiring Confirmation` for any write or user-visible action such as commenting, labeling, committing, pushing, or closing.
+- Output artifacts follow a fixed Markdown template with fields like Summary, Evidence/Validation Evidence, Impact Scope/Risks, and a Draft Reply/Review Comment, saved under `.claude/reviews/issues/issue-<N>.md` or `.claude/reviews/prs/pr-<N>.md`.
+- Commit and PR titles must follow the `<type>: <description>` convention from `AGENTS.md` and must not include tool/agent source prefixes such as `[codex]`, `autocode`, or `copilot`.

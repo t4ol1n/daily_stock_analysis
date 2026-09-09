@@ -13,6 +13,7 @@ A股自选股智能分析系统 - AI分析层
 import json
 import logging
 import math
+import os
 import re
 import time
 from dataclasses import dataclass
@@ -3861,10 +3862,10 @@ class GeminiAnalyzer:
             if backend_id not in LOCAL_CLI_GENERATION_BACKEND_IDS:
                 logger.debug(f"=== 完整 Prompt ({len(prompt)}字符) ===\n{prompt}\n=== End Prompt ===")
 
-            # 设置生成配置
+            # 设置生成配置（推理模型的思考令牌会占用输出预算，上限可通过 ANALYSIS_MAX_OUTPUT_TOKENS 调整）
             generation_config = {
                 "temperature": config.llm_temperature,
-                "max_output_tokens": 8192,
+                "max_output_tokens": int(os.getenv("ANALYSIS_MAX_OUTPUT_TOKENS", "16384")),
             }
 
             logger.info(f"[LLM调用] 开始调用 {model_name}...")
