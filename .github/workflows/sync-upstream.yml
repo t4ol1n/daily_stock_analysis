@@ -2,7 +2,7 @@ name: Sync Upstream
 
 on:
   schedule:
-    - cron: '0 0 * * *'   # 每天 UTC 0 点，可按需改
+    - cron: '0 0 * * 0'   # 每周日 UTC 0 点（北京时间周日早上 8 点）
   workflow_dispatch:       # 允许手动触发
 
 jobs:
@@ -24,3 +24,16 @@ jobs:
           upstream_sync_branch: main
           target_sync_branch: main
           target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          test_mode: false  # 设为 true 可干跑测试，不实际推送
+
+      - name: Notify on conflict
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Upstream sync failed - merge conflict detected',
+              body: `Automatic sync from upstream failed at ${new Date().toISOString()}. Please resolve conflicts manually.`
+            })
