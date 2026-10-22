@@ -1,0 +1,8 @@
+- Each provider is implemented as a class inheriting from `BaseFetcher` and overriding `_fetch_raw_data` / `_normalize_data`, while reusing the base's `get_daily_data` pipeline for cleaning and indicator computation.
+- Providers declare a class attribute `priority` (lower = higher precedence) and optionally `allow_empty_daily_data` to signal whether empty results should be treated as success.
+- Market eligibility is expressed declaratively via `DataFetcherManager._DAILY_MARKET_FETCHER_SUPPORT` mapping fetcher names to supported market sets rather than ad-hoc checks in callers.
+- External API calls use tenacity decorators with `retry_if_exception_type(RateLimitError)` and exponential backoff, combined with random jitter sleeps between requests to avoid rate limits.
+- All realtime quote returns are wrapped in `UnifiedRealtimeQuote` from `realtime_types.py`, with missing fields left as `None` and a `source: RealtimeSource` tag indicating which provider supplied the data.
+- Failure of a provider is recorded through the shared `CircuitBreaker` instances (`get_realtime_circuit_breaker()`, `get_chip_circuit_breaker()`, or the manager's `_daily_source_health`) so subsequent retries skip the source during cooldown.
+- Fundamental data retrieval is delegated to market-specific adapters (`AkshareFundamentalAdapter`, `YfinanceFundamentalAdapter`, `FutuFundamentalAdapter`) that return a uniform bundle dict, keeping fetchers free of financial-statement parsing logic.
+- Stock code normalization goes through `normalize_stock_code` / `canonical_stock_code` before being dispatched to providers, stripping SH/SZ/BJ prefixes and normalizing HK suffixes to canonical forms.

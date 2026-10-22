@@ -1,0 +1,1 @@
+FastAPI-based HTTP server exposing the v1 REST API for stock analysis, agent chat, backtesting, portfolio and system configuration, with optional admin auth and a bundled SPA frontend.

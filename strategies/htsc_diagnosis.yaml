@@ -1,0 +1,55 @@
+# HTSC AI涨乐诊断策略 / Huatai Securities AI Diagnosis
+
+name: htsc_diagnosis
+display_name: AI涨乐诊断
+description: 调用华泰证券AI涨乐专业诊断，获取个股综合分析、市场洞察等权威数据。
+category: external_api
+core_rules: [1, 2, 3]
+required_tools:
+  - htsc_diagnosis_stock
+  - htsc_market_insight
+aliases: [华泰, AI涨乐, HT诊断, 华泰诊断]
+default_active: false
+default_router: false
+default_priority: 50
+market_regimes: [all]
+user_invocable: true
+
+instructions: |
+  **AI涨乐诊断策略（HTSC AI Diagnosis）**
+
+  适用场景：
+  - 需要获取华泰证券专业诊断分析时。
+  - 补充其他策略的分析结论。
+  - 获取权威的市场数据和资金流向。
+
+  数据源：
+  - 华泰证券AI涨乐API
+  - 包含：综合分析诊断、市场洞察、指标查询等
+
+  分析框架：
+
+  1. **综合诊断（diagnosisStock）**
+     - 调用华泰AI涨乐获取个股综合分析
+     - 包含：价格走势、资金流向、融资融券、技术面分析
+     - 提供明确的操作建议和风险提示
+
+  2. **市场洞察（marketInsight）**
+     - 获取市场整体趋势和板块轮动
+     - 了解当前市场热点和资金动向
+
+  3. **数据整合**
+     - 将HT诊断结果与其他数据源整合
+     - 形成更全面的分析结论
+
+  评分调整建议：
+  - HT诊断强烈看多：`sentiment_score +15`
+  - HT诊断中性：`sentiment_score +0`
+  - HT诊断看空：`sentiment_score -15`
+  - 资金大幅流入：`sentiment_score +8`
+  - 技术面突破：`sentiment_score +10`
+
+  注意事项：
+  - HT API 有调用频率限制，避免频繁调用
+  - 诊断结果仅供参考，需结合其他数据综合判断
+  - 部分数据可能存在延迟

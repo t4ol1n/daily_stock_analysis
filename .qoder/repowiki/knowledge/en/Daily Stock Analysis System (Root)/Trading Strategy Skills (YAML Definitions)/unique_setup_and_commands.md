@@ -1,0 +1,1 @@
+Place custom strategy YAMLs in any directory and point `AGENT_SKILL_DIR` to it at process start; if a custom skill shares a `name` with a built-in one, the custom version overrides it. No build step is required — the application auto-discovers all `.yaml` files under the configured directories.

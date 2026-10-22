@@ -1,0 +1,1 @@
+Jinja2 templates that render daily stock analysis results into brief, full markdown, and WeChat-optimized report formats using shared macros and localization helpers.

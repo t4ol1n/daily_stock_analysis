@@ -1,0 +1,1 @@
+Build/run via `docker-compose -f ./docker/docker-compose.yml up -d` for scheduled analyzer mode, or add `server` to start the FastAPI service. Host `.env` is loaded via `env_file`; do NOT mount it as a single volume because Docker mount-point semantics break the app's atomic config writes. Pre-create `../longbridge_tokens` on the host if persisting Longbridge OAuth tokens.

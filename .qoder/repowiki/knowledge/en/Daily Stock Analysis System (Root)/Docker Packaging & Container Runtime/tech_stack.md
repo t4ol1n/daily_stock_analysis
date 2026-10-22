@@ -1,0 +1,1 @@
+Multi-stage Docker build combining Node.js 20 (npm ci + build) and Python 3.11 on Debian bookworm-slim; `gosu` for privilege dropping; `wkhtmltopdf` for PDF/image generation; JSON file logging driver with size/rotation limits in compose.

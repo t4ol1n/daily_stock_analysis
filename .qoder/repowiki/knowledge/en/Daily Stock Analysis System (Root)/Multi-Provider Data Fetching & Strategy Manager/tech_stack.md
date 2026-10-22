@@ -1,0 +1,1 @@
+Python with pandas/numpy for tabular data; external providers via akshare, tushare, yfinance, baostock, pytdx, efinance, longbridge, futuOpenD, finnhub, alphavantage, tickflow; resilience via tenacity exponential backoff and a custom `CircuitBreaker` (3 failures, 5 min cooldown, half-open probe).

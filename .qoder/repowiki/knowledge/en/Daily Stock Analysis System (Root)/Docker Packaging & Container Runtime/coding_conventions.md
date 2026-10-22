@@ -1,0 +1,4 @@
+- Container configuration is parameterized through environment variables with defaults set in the Dockerfile (e.g. `WEBUI_HOST`, `API_PORT`, `DATABASE_PATH`) and overridden via compose `environment` or host `.env`.
+- Writable state paths are declared both as `VOLUME` directives in the Dockerfile and as bind mounts in `docker-compose.yml`, keeping data persistent across restarts.
+- The entrypoint performs idempotent ownership repair of all bind-mounted directories before dropping to the non-root `dsa` user, rather than relying on pre-set host permissions.
+- Compose services share common build context, env_file, volumes, logging, and resource limits via an `x-common` YAML anchor extended with `<<: *common`.

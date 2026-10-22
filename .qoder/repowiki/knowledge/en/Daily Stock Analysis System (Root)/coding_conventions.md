@@ -1,0 +1,5 @@
+- Every process entry point calls `src.config.setup_env()` followed by `src.logging_config.setup_logging(...)` before importing domain modules, ensuring shared configuration and log routing.
+- Heavy or optional dependencies (e.g., `src.core.pipeline.StockAnalysisPipeline`, broker integrations) are imported lazily inside functions to keep startup fast and allow consumers that never run analysis to avoid those imports.
+- Configuration is read exclusively through `src.config.get_config()` / `Config` rather than direct env access, and CLI flags override `.env` values at runtime.
+- Cross-process coordination uses file-based locks (e.g., market review lock) and idempotent environment refresh so multiple invocations do not race.
+- Error paths log warnings and continue rather than aborting the whole run, so a single stock failure does not stop batch analysis.

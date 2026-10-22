@@ -1,0 +1,1 @@
+Provider priority changes at runtime based on environment: when `TUSHARE_TOKEN` is set, `TushareFetcher` is elevated to priority 0; otherwise `EfinanceFetcher` takes priority 0. Some providers require optional installs (e.g. `futuOpenD`, `longbridge`) and are lazily imported so missing packages do not break startup.

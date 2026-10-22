@@ -1,0 +1,6 @@
+- Every strategy YAML defines a unique `name` (lowercase, underscore-separated) alongside a human-readable `display_name` and a short `description`.
+- Strategies declare their type via `category` using one of the four values: trend, pattern, reversal, framework.
+- Each skill lists its data dependencies in `required_tools`, referencing tool names such as `get_daily_history`, `analyze_trend`, `get_realtime_quote`, `search_stock_news`, and `get_stock_info`.
+- The `instructions` block is written in natural language (Chinese or English) and explicitly references tool calls by name to guide the AI agent on what data to fetch and how to interpret it.
+- Scoring adjustments are expressed as concrete `sentiment_score` deltas plus instructions to record the strategy name in `buy_reason`/`pattern_analysis` for traceability.
+- Optional routing metadata (`default_active`, `default_router`, `default_priority`, `market_regimes`, `aliases`) is used to control whether a skill participates in default sets, fallback routing, display ordering, and regime-based selection.

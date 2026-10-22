@@ -1,0 +1,1 @@
+Jinja2 templating engine with custom global filters/helpers injected at render time; uses Jinja2 macros and the `with context` import pattern to share markup across templates.

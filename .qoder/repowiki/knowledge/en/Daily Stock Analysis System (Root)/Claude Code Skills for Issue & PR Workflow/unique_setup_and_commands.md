@@ -1,0 +1,1 @@
+Skills are invoked from Claude Code using slash commands: `/analyze-issue <number>`, `/analyze-pr <number>`, `/fix-issue <number>`. They require `gh` authenticated against `ZhuLinsen/daily_stock_analysis` and expect `AGENTS.md` at the repo root as the authoritative rule source.

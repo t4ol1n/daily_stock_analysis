@@ -1,0 +1,6 @@
+- Each command is a class inheriting `BotCommand` and exposing `name`, `aliases`, `description`, `usage`, plus `execute` (with a default async wrapper `execute_async` that runs the sync method in a thread pool).
+- New commands are registered by adding their class to the `ALL_COMMANDS` list in `bot/commands/__init__.py`; the dispatcher auto-discovers them at startup.
+- Platform adapters implement the `BotPlatform` ABC from `bot/platforms/base.py` and are exposed through the `ALL_PLATFORMS` dict keyed by a string name used for webhook routing.
+- Cross-cutting concerns (rate limiting, admin checks, argument validation, unknown-command handling) are centralized in `CommandDispatcher._prepare_dispatch` so individual commands only implement business logic.
+- Natural-language messages are routed through a two-stage pipeline: a regex pre-filter (`_NL_PREFILTER`) followed by an LLM intent parse (`_parse_intent_via_llm`) that returns `{intent, codes, strategy}` and maps to existing `/ask` or `/chat` commands.
+- All I/O-heavy or blocking operations inside commands are executed asynchronously via `asyncio.to_thread` or awaited async methods, keeping the event loop unblocked.

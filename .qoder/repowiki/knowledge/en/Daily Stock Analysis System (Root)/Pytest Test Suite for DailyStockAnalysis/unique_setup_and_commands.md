@@ -1,0 +1,1 @@
+Tests rely on `conftest.py` monkey-patching `fastapi.testclient.TestClient` and `starlette.testclient.TestClient` globally before any test imports the app; running tests requires no extra setup beyond installing dependencies, but integration/smoke tests may need external services or environment variables for providers like Longbridge, Tushare, or Alpha Vantage.

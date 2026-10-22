@@ -1,0 +1,1 @@
+Defines the multi-stage Docker image, compose services, and privileged entrypoint that build the frontend, install Python dependencies, and run the stock analysis system as a non-root container.

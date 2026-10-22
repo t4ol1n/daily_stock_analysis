@@ -1,0 +1,4 @@
+- Cross-cutting data flows through Pydantic-style schemas in `schemas/` rather than ad-hoc dicts between layers.
+- Pluggable components are exposed via module-level registries/factories (e.g., `llm/backend_registry.py`, `notification_sender/` per-channel modules, `agent/agents/` base class hierarchy) instead of hard-coded imports.
+- Persistence is accessed exclusively through `repositories/*_repo.py` classes, keeping services decoupled from storage implementation.
+- External integrations (LLM providers, notification channels, brokers) are isolated behind thin adapter modules so core logic remains provider-agnostic.

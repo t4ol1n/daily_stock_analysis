@@ -1,0 +1,8 @@
+schema_version: 1
+module_path: templates
+title: Stock Report Jinja2 Templates
+scope:
+    - templates/
+source_files: []
+depends_on: []
+related_to: []

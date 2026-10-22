@@ -1,0 +1,5 @@
+- All user-facing strings are routed through the `labels.*` namespace rather than being hardcoded, enabling multi-language reports driven by the `report_language` variable.
+- Optional nested dashboard sections are guarded by truthiness checks on their parent dicts (e.g., `if intel`, `if data_persp`, `if battle`) before rendering subsections.
+- Long text fields are truncated inline with slice notation (e.g., `[:60]`, `[:80]`, `[:50]`) to keep outputs within platform-specific width limits.
+- Missing or absent values are rendered as `'N/A'` via `.get(key, 'N/A')` instead of raising undefined errors, making templates resilient to partial payloads.
+- Each stock entry is iterated from a shared `enriched` list and accessed through the stable `e.result`, `e.signal_emoji`, `e.signal_text`, `e.stock_name` attribute shape across all three output templates.

@@ -1,0 +1,1 @@
+Plain YAML configuration files parsed at runtime; strategies are loaded from both the built-in `strategies/` directory and an optional user directory pointed to by the `AGENT_SKILL_DIR` environment variable.

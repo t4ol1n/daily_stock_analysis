@@ -1,0 +1,1 @@
+Icon assets under `assets/dsa_vi/` can be regenerated from `.psd` sources by running `python assets/dsa_vi/gen_icons.py`.

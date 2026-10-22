@@ -1,0 +1,1 @@
+Python package that wires LLM-backed agent orchestration, market analysis pipelines, screening services, backtesting, and multi-channel notifications around a shared config, storage, and schema layer.

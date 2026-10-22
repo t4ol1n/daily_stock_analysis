@@ -1,0 +1,1 @@
+pytest with FastAPI/Starlette test clients patched to run synchronously; AnyIO event-loop bridge; httpx ASGI transport; optional real integrations gated behind smoke-test files (`longbridge_live_smoke.py`, `tw_institutional_live_smoke.py`).

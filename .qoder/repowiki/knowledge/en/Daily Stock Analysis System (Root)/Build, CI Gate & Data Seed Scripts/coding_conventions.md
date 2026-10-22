@@ -1,0 +1,5 @@
+- Shell scripts use `set -euo pipefail` and resolve `SCRIPT_DIR`/`ROOT_DIR` via `$(cd "$(dirname "$0")" && pwd)` so they remain relocatable across platforms.
+- Python scripts add the repository root to `sys.path` by inserting `Path(__file__).resolve().parents[1]` before any project import, enabling direct execution without installation.
+- CLI entry points expose behavior through `argparse` with mutually exclusive mode flags (e.g. `--db`, `--llm`, `--fetch`, `--notify`, `--all` in `check_env.py`; scenario subcommands in `test.sh` and `ci_gate.sh`).
+- Build and CI scripts validate artifacts post-step — importing key modules (`futu`, `orjson`, `src.services.screening.pipeline`) inside the packaged binary and asserting strategy/static asset counts match source trees before declaring success.
+- Stock/market classification logic (A-share vs HK vs US vs ETF vs INDEX) is centralized in helpers like `determine_market_and_code` / `build_canonical_code` rather than duplicated across generators.

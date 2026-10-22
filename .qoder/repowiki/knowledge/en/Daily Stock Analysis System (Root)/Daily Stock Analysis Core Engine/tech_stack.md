@@ -1,0 +1,1 @@
+SQLite via `storage.py` for persistence; LiteLLM-based backend abstraction in `llm/` for multi-provider LLM access; YAML-driven screening strategy configs under `services/screening/strategies`; Python scheduling via `scheduler.py` driving service workers.

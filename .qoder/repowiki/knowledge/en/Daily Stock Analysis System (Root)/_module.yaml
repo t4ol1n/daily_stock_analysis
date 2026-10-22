@@ -1,0 +1,22 @@
+schema_version: 1
+module_path: ""
+title: Daily Stock Analysis System (Root)
+scope:
+    - README.md
+    - .gitignore
+    - main.py
+    - server.py
+    - webui.py
+    - pyproject.toml
+    - requirements.txt
+    - setup.cfg
+    - .dockerignore
+    - .gitattributes
+    - AGENTS.md
+    - CLAUDE.md
+    - LICENSE
+    - SKILL.md
+    - THIRD_PARTY_NOTICES.md
+source_files: []
+depends_on: []
+related_to: []

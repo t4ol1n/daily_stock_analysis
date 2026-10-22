@@ -1,0 +1,1 @@
+Strategy-pattern layer that abstracts multiple stock market data providers (A-shares, HK, US, JP, KR, TW) behind a unified fetcher interface with automatic failover, circuit breaking, and fundamental adapters.
