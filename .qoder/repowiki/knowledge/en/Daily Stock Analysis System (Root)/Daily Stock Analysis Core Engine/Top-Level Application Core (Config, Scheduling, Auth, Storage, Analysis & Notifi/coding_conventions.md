@@ -1,0 +1,6 @@
+- Configuration values are parsed through typed helper functions (`parse_env_int`, `parse_env_float`, `parse_env_bool`, `normalize_*`) that log warnings and clamp to safe defaults instead of raising.
+- Cross-cutting state (auth secrets, rate-limit buckets, config instances) is lazily initialized via module-level globals guarded by `threading.Lock` and refreshed through explicit `refresh_*` entry points.
+- Sensitive files written atomically by writing to a `.tmp` path then `os.replace`-ing into place, with `chmod(0o600)` applied to credential and secret files.
+- Scheduler jobs are wrapped in `_safe_run_task` try/except blocks that log start/end timestamps and exceptions without crashing the event loop.
+- Report text is localized through `src.report_language` lookup tables keyed by normalized language rather than inline string literals.
+- Database writes use SQLAlchemy declarative models with explicit `UniqueConstraint`/`Index` definitions and track schema version via a `schema_migrations` table.

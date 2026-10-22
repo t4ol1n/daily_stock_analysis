@@ -1,0 +1,37 @@
+schema_version: 1
+module_path: core_engine/top_level_app
+title: Top-Level Application Core (Config, Scheduling, Auth, Storage, Analysis & Notification)
+scope:
+    - src/auth.py
+    - src/config.py
+    - src/scheduler.py
+    - src/storage.py
+    - src/logging_config.py
+    - src/enums.py
+    - src/formatters.py
+    - src/report_language.py
+    - src/search_service.py
+    - src/notification.py
+    - src/notification_capabilities.py
+    - src/notification_contracts.py
+    - src/notification_noise.py
+    - src/notification_routing.py
+    - src/market_analyzer.py
+    - src/stock_analyzer.py
+    - src/analyzer.py
+    - src/analysis_context_pack_overview.py
+    - src/analysis_context_pack_prompt.py
+    - src/daily_market_context_guardrail.py
+    - src/market_context.py
+    - src/market_phase_prompt.py
+    - src/market_phase_summary.py
+    - src/market_structure_prompt.py
+    - src/phase_decision_guardrail.py
+    - src/feishu_doc.py
+    - src/md2img.py
+    - src/share_image.py
+    - src/webui_frontend.py
+source_files: []
+depends_on: []
+related_to:
+    - path: api_server

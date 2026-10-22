@@ -1,0 +1,1 @@
+Run `python -m src.auth reset_password` to interactively reset the admin password when `ADMIN_AUTH_ENABLED=true`; `src/config.py::setup_env()` must be called before any config access to load `.env` (optionally overridden by `ENV_FILE`); scheduler defaults to 18:00 daily execution unless `SCHEDULE_TIME` or `SCHEDULE_TIMES` is set.

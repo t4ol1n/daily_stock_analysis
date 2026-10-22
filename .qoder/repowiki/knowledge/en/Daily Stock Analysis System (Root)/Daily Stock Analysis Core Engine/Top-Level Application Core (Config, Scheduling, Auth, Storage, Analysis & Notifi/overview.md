@@ -1,0 +1,1 @@
+Application bootstrap and core runtime: configuration loading, scheduled analysis orchestration, admin auth, SQLite storage, LLM-backed stock/market analysis, and multi-channel notification delivery.

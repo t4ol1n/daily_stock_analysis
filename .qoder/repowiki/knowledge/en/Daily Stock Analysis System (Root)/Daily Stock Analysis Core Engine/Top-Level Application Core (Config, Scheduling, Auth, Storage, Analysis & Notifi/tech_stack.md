@@ -1,0 +1,1 @@
+SQLite + SQLAlchemy ORM for persistence; LiteLLM Router for unified LLM calls across Gemini/Anthropic/OpenAI/local CLI; `schedule` library for cron-like daily jobs; PBKDF2-HMAC-SHA256 with 100k iterations for admin password hashing; dotenv for `.env`-based configuration.

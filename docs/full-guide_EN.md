@@ -57,15 +57,16 @@ Go to your forked repo → `Settings` → `Secrets and variables` → `Actions` 
 
 | Secret Name | Description | Required |
 |------------|------|:----:|
-| `ANSPIRE_API_KEYS` | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC) API key, one key for popular LLMs and Chinese-optimized web search with free quota for this project | Recommended |
+| `MODELFLARE_KEY` | [Modelflare](https://modelflare.dev/sign-up?utm_source=github&utm_campaign=daily_stock_analysis) API key; supplies the default endpoint and model automatically | Recommended |
 | `AIHUBMIX_KEY` | [AIHubMix](https://inferera.com/?aff=CfMq) API key, one key for multiple model families and a 10% top-up discount for this project | Recommended |
 | `GEMINI_API_KEY` | Get free key from [Google AI Studio](https://aistudio.google.com/) | Optional |
 | `ANTHROPIC_API_KEY` | Anthropic Claude API Key | Optional |
 | `OPENAI_API_KEY` | OpenAI-compatible API Key (supports DeepSeek, Qwen, etc.) | Optional |
 | `OPENAI_BASE_URL` | OpenAI-compatible API endpoint (e.g., `https://api.deepseek.com`) | Optional |
 | `OPENAI_MODEL` | Model name (e.g., `deepseek-v4-flash`) | Optional |
+| `ANSPIRE_API_KEYS` | Legacy compatibility entry for existing Anspire search and LLM shared-key setups; model access depends on account permissions | Optional |
 
-> *Note: Configure at least one model key or channel. Anspire or AIHubMix is the simplest starting point for one-key multi-model access. Startup validation reports a clear error when no usable AI model key or model channel is configured.
+> *Note: Configure at least one model key or channel. For Modelflare, set only `MODELFLARE_KEY`, with an optional `LITELLM_MODEL` override (single-channel default: `openai/gpt-6.1-sol`); the endpoint defaults to `https://modelflare.dev/v1`; see the complete [LLM Config Guide example](LLM_CONFIG_GUIDE_EN.md#example-modelflare). Available models depend on your account. Startup validation reports a clear error when no usable AI model key or model channel is configured.
 
 #### Notification Channels (Multiple can be configured, all will receive notifications)
 
@@ -151,7 +152,7 @@ Go to your forked repo → `Settings` → `Secrets and variables` → `Actions` 
 |------------|------|:----:|
 | `STOCK_LIST` | Watchlist codes, e.g., `600519,300750,002594,7203.T,005930.KS`; English commas are recommended, while pasted Chinese commas, enumeration commas, semicolons, spaces, and newlines are recognized and normalized to English commas | ✅ |
 | `ANSPIRE_API_KEYS` | [Anspire AI Search](https://aisearch.anspire.cn/) optimized for Chinese content; the same key can also be used for Anspire LLM fallback scenarios (example model: `Doubao-Seed-2.0-lite`) | Recommended |
-| `SERPAPI_API_KEYS` | [SerpAPI](https://serpapi.com/baidu-search-api?utm_source=github_daily_stock_analysis) search-engine results for realtime financial news | Recommended |
+| `SERPAPI_API_KEYS` | [SerpAPI](https://serpapi.com/github-daily-stock-analysis) search-engine results for realtime financial news | Recommended |
 | `TAVILY_API_KEYS` | [Tavily](https://tavily.com/) Search API (for news search) | Optional |
 | `BOCHA_API_KEYS` | [Bocha Search](https://open.bocha.cn/) Web Search API (Chinese search optimized, supports AI summaries, multiple keys comma-separated) | Optional |
 | `BRAVE_API_KEYS` | [Brave Search](https://brave.com/search/api/) API (privacy-first, US-stock news enrichment, comma-separated for multiple keys) | Optional |
@@ -162,6 +163,11 @@ Go to your forked repo → `Settings` → `Secrets and variables` → `Actions` 
 | `TUSHARE_TOKEN` | [Tushare Pro](https://tushare.pro/weborder/#/login?reg=834638) Token | Optional |
 | `TUSHARE_HTTP_URL` | Tushare Pro HTTP endpoint; when unset/empty defaults to the official `http://api.tushare.pro`. Set to a `http://` or `https://` URL only when routing through a corporate proxy, cross-border network, or a self-hosted mirror | Optional |
 | `TICKFLOW_API_KEY` | [TickFlow](https://tickflow.org) API key for optional A-share daily K-lines, realtime quotes, stock list/name lookup, and CN market review enhancement; permission or entitlement failures fall back to existing providers | Optional |
+| `MX_APIKEY` / `MX_PRIORITY` | MiaoXiang (Eastmoney MX_API) supplementary provider: fills chip distribution and per-stock capital flow when public eastmoney endpoints fail or are rate-limited. **Strictly opt-in third-party capability**: requires a user-provided key (MiaoXiang Skills page); the current free-tier/quota policy may change and long-term free availability is not guaranteed. Not configured = no behavior change. `MX_PRIORITY` defaults to `6`. GitHub Actions requires `MX_APIKEY` in Secrets | Optional |
+
+MiaoXiang chip/flow methods share a network-admission lock across instances in one process. When a query reaches this boundary while another request is running, it is skipped instead of waiting on that lock. Capital-flow timeout quarantine lasts until the actual background worker exits, while other providers remain eligible for fallback. This does not cancel an already dispatched request or change the manager’s existing serialization of chip calls. Capability checks exclude this provider from all daily-data routes, and table selection/row parsing share dictionary/list `nameMap` normalization.
+
+MiaoXiang capital flow uses explicit main net-inflow amount metrics only; closing prices, ratios, and missing amounts are never substituted as currency values. A missing latest-day amount stays unknown, and a 5/10-day window with missing amounts emits no total rather than backfilling earlier dates.
 
 > **GitHub Actions:** The bundled `00-daily-analysis.yml` maps `TUSHARE_TOKEN`, `TICKFLOW_API_KEY` / `TICKFLOW_*`, and the documented `LONGBRIDGE_*` variables into the job environment. Store `TICKFLOW_API_KEY` in **Secrets**; non-sensitive TickFlow priority, adjustment, and batch switches can live in **Variables** or **Secrets**. Longbridge OAuth still requires a client id plus `LONGBRIDGE_OAUTH_TOKEN_CACHE_B64` for headless Actions runs, while the legacy `LONGBRIDGE_APP_KEY` / `LONGBRIDGE_APP_SECRET` / `LONGBRIDGE_ACCESS_TOKEN` triplet remains supported.
 
@@ -171,7 +177,7 @@ Go to your forked repo → `Settings` → `Secrets and variables` → `Actions` 
 
 To get started quickly, you need at minimum:
 
-1. **AI Model**: `ANSPIRE_API_KEYS` (one key for LLMs and search), `AIHUBMIX_KEY` (one key for multiple model families), `GEMINI_API_KEY`, or `OPENAI_API_KEY`
+1. **AI Model**: Follow the [Modelflare Channels example](LLM_CONFIG_GUIDE_EN.md#example-modelflare), or use `AIHUBMIX_KEY` (one key for multiple model families), `GEMINI_API_KEY`, or `OPENAI_API_KEY`
 2. **Notification Channel**: At least one, e.g., `WECHAT_WEBHOOK_URL` or `EMAIL_SENDER` + `EMAIL_PASSWORD`
 3. **Stock List**: `STOCK_LIST` (required)
 4. **Search API**: `ANSPIRE_API_KEYS` or `SERPAPI_API_KEYS` (recommended for news and sentiment search)
@@ -230,13 +236,19 @@ Default schedule: Every weekday at **18:00 (Beijing Time)** automatic execution.
 | `AGENT_CONTEXT_PROTECTED_TURNS` | Number of recent user turns and following replies kept verbatim; blank follows the selected profile preset | - | No |
 | `LITELLM_FALLBACK_MODELS` | Fallback models, comma-separated | - | No |
 | `LLM_CHANNELS` | Channel names (comma-separated), use with `LLM_{NAME}_*`, see [LLM Config Guide](LLM_CONFIG_GUIDE_EN.md) | - | No |
+| `MODELFLARE_KEY` | Modelflare one-key setup; enables the default channel automatically; Actions reads it from Secrets only | - | For Modelflare |
+| `LLM_MODELFLARE_API_KEY` | Advanced channel key, overrides MODELFLARE_KEY; use `LLM_MODELFLARE_API_KEYS` for multiple keys | - | No |
+| `LLM_MODELFLARE_PROTOCOL` | Modelflare channel protocol; inferred as `openai` with the default endpoint | `openai` | No |
+| `LLM_MODELFLARE_API_SURFACE` | Modelflare API surface; the quickstart example uses `chat_completions` | `chat_completions` | No |
+| `LLM_MODELFLARE_BASE_URL` | Modelflare endpoint; explicit values override the default | `https://modelflare.dev/v1` | No |
+| `LLM_MODELFLARE_MODELS` | Advanced explicit channel model list; a single Modelflare channel can reuse LITELLM_MODEL | Inferred for a single channel | No |
 | `LLM_HERMES_API_KEY` | Single API key for the reserved Hermes local HTTP generation channel; provide it through `.env`, runtime config, or Secrets only | - | Required for Hermes |
 | `LLM_HERMES_BASE_URL` | Hermes local loopback `/v1` endpoint; defaults to `http://127.0.0.1:8642/v1`; remote endpoints are not supported | `http://127.0.0.1:8642/v1` | No |
 | `LLM_HERMES_MODELS` | Raw Hermes model list; Phase 3 defaults to `hermes-agent`, maps to runtime route `openai/hermes-agent`, and does not support Vision, stream, tools, or Agent tools | `hermes-agent` | No |
 | `LITELLM_CONFIG` | Advanced model routing YAML path (expert use) | - | No |
 | `LLM_USAGE_HMAC_SECRET` | Secret for LLM usage telemetry message HMACs; leave empty to use a generated local data-dir secret file | - | No |
 | `LLM_USAGE_HMAC_KEY_VERSION` | Version label for the LLM usage HMAC key; update it when rotating the secret | `local-v1` | No |
-| `ANSPIRE_API_KEYS` | [Anspire](https://open.anspire.cn/?share_code=QFBC0FYC) API key, one key for the LLM gateway and search | - | Optional |
+| `ANSPIRE_API_KEYS` | [Anspire](https://open.anspire.cn/dsa?share_code=QFBC0FYC) API key, one key for the LLM gateway and search | - | Optional |
 | `AIHUBMIX_KEY` | [AIHubMix](https://inferera.com/?aff=CfMq) API key, one key for multiple model families | - | Optional |
 | `GEMINI_API_KEY` | Google Gemini API Key | - | Optional |
 | `GEMINI_MODEL` | Primary model name (legacy, `LITELLM_MODEL` preferred) | `gemini-3.1-pro-preview` | No |
@@ -253,7 +265,7 @@ Default schedule: Every weekday at **18:00 (Beijing Time)** automatic execution.
 
 > `AGENT_BACKEND=codex_app_server` is an experimental option only for the existing ask-stock Chat. Install and sign in to Codex on the device running DSA, then open **Settings → Agent → Ask-stock method**, keep `AGENT_ARCH=single`, and set a positive overall timeout. Settings checks only whether the configuration, Codex command, and required protocol allow an attempt; it does not sign in, call a model, or read stock data. After saving, ask directly in Chat—the first question is the first real execution. Codex can currently read only saved analysis context and backtest summaries; use **Default model** for live quotes, news, market hotspots, technical-indicator recalculation, per-stock backtest details, or portfolio tools. After the user clicks Stop, the page shows **Stopping** and reports **Stopped** only after both the Codex turn and its current tool task have exited. It currently supports macOS, Linux, and a complete DSA backend running inside WSL; native Windows is not supported, while the Phase 2 `codex_cli` generation path remains unchanged. Codex Multi Agent and Codex Deep Research are not supported; existing LiteLLM Multi Agent, Deep Research, regular reports, and scheduled analysis stay unchanged. Codex is not an offline model, and services configured in Codex may process stock questions and redacted tool results. DSA does not read or store Codex credentials. Docker, remote servers, and Desktop must each expose Codex on the backend process PATH. See the [LLM Config Guide](LLM_CONFIG_GUIDE_EN.md#codex-local-agent-phase-6-experimental-prototype).
 
-> *Note: Configure at least one of `ANSPIRE_API_KEYS`, `AIHUBMIX_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `OLLAMA_API_BASE`, or `LLM_CHANNELS` / `LITELLM_CONFIG`. `ANSPIRE_API_KEYS` and `AIHUBMIX_KEY` are auto-adapted without an `OPENAI_BASE_URL`.
+> *Note: Configure a usable `LLM_CHANNELS` / `LITELLM_CONFIG`, or a legacy provider key / `OLLAMA_API_BASE`. Modelflare uses Channels; existing legacy `ANSPIRE_API_KEYS` and `AIHUBMIX_KEY` setups are still auto-adapted without an `OPENAI_BASE_URL`.
 
 ### Notification Channel Configuration
 
@@ -417,14 +429,17 @@ For the notification baseline, diagnostics, and deployment notes, see [Notificat
 | `SCHEDULE_TIME` | Scheduled execution time | `18:00` |
 | `SCHEDULE_TIMES` | Multiple scheduled execution times, comma-separated; falls back to `SCHEDULE_TIME` when empty | empty |
 | `DSA_RUNTIME_SCHEDULER_TIMEOUT_SECONDS` | Hard timeout in seconds for each Web/API runtime scheduler analysis (minimum 60); the isolated analysis process is terminated on timeout so later runs can continue | `2700` |
+| `DSA_TIMEOUT_PARTIAL_NOTIFY` | **Default on (behavior change):** after a hard timeout, send a partial notification for analyses already saved to history; previously timeout sent no per-stock push. When `false`, structured `last_error` is still recorded but no push is sent | `true` |
 | `SCHEDULE_RUN_IMMEDIATELY` | Run once immediately when scheduler mode starts; when unset it keeps following the legacy `RUN_IMMEDIATELY` runtime override | `true` |
 | `RUN_IMMEDIATELY` | Run once immediately for non-scheduler startup; also acts as the legacy fallback when `SCHEDULE_RUN_IMMEDIATELY` is unset | `true` |
 | `LOG_DIR` | Log directory | `./logs` |
 | `SAVE_CONTEXT_SNAPSHOT` | Persist analysis-history `context_snapshot`. When false, new history records do not save enhanced_context, market_phase_summary, AnalysisContextPack overview, or diagnostic snapshots, but current-run prompt summaries remain enabled | `true` |
 
+> Timeout partial-delivery ops: a notification-channel exception is logged (`Partial timeout notification failed`) and skipped; it is not re-raised and cannot keep `status().running` true (notify runs on a daemon thread after the analysis lock is released). Storage import / collect failures also fail open: `status().last_error` may stay at the baseline `timed out after Ns` string, or be enriched to `completed=0`, which is indistinguishable from “nothing was saved”. Grep `Failed to collect completed analyses after timeout`, `Timeout partial delivery failed open`, and `Partial timeout notification failed`. After the first release, watch notification volume; set `DSA_TIMEOUT_PARTIAL_NOTIFY=false` to disable pushes.
+
 > Behavior notes:
 > - When `TICKFLOW_API_KEY` is configured, TickFlow is instantiated as an optional A-share daily K-line data source and CN market-review enhancer. `TICKFLOW_PRIORITY` only affects the generic A-share daily K-line/provider fallback chain. Realtime quote priority is controlled separately by `REALTIME_SOURCE_PRIORITY`; TickFlow realtime quotes are used only when that list explicitly includes `tickflow`, and any source listed before `tickflow` is tried first.
-> - The five SH/SZ indices currently registered in `IndexRegistry` are `sh000016` (SSE 50), `sh000688` (STAR 50), `sz399001` (SZSE Component), `sz399006` (ChiNext), and `sh000300` (CSI 300). Explicit-market inputs (exchange-suffix forms such as `000016.SH` are also accepted) bypass generic priority sorting and use the fixed Tencent → AkShare → TickFlow → YFinance fallback chain; unconfigured or unavailable providers are skipped. Bare `000016`-style inputs remain stocks and do not enter the index chain. This fixed chain ignores `EFINANCE_PRIORITY`, `AKSHARE_PRIORITY`, `TUSHARE_PRIORITY`, `TICKFLOW_PRIORITY`, `PYTDX_PRIORITY`, `BAOSTOCK_PRIORITY`, `YFINANCE_PRIORITY`, and `TENCENT_PRIORITY`. Existing stock and realtime-quote ordering is unchanged.
+> - All SH/SZ indices currently registered in `IndexRegistry` (the `sh`/`sz`/`csi` prefixes; see the [Index watchlist configuration](#index-watchlist-configuration) registry notes and `scripts/stock_index_seeds/index_registry.csv` for the full list) bypass generic priority sorting when given as explicit-market inputs (exchange-suffix forms such as `000016.SH` are also accepted) and use the fixed Tencent → AkShare → TickFlow → YFinance fallback chain; unconfigured or unavailable providers are skipped. Bare `000016`-style inputs remain stocks and do not enter the index chain. This fixed chain ignores `EFINANCE_PRIORITY`, `AKSHARE_PRIORITY`, `TUSHARE_PRIORITY`, `TICKFLOW_PRIORITY`, `PYTDX_PRIORITY`, `BAOSTOCK_PRIORITY`, `YFINANCE_PRIORITY`, and `TENCENT_PRIORITY`. Existing stock and realtime-quote ordering is unchanged.
 > - Registered index names normally come from the local registry. Only an invalid registry name triggers the Tencent → AkShare → TickFlow name fallback; YFinance is not part of the name chain. If all four daily providers fail, an index request returns an empty result with a summary warning, while ordinary stocks retain the existing final `DataFetchError` contract.
 > - TickFlow daily K-lines default to `TICKFLOW_KLINE_ADJUST=none`; daily `volume` is converted from lots to shares, while `amount` remains in yuan.
 > - TickFlow daily K-line range requests pass explicit `start_time` / `end_time` / `count`. Because the official quickstart documents that time-range queries are still limited by `count`, non-empty count-capped responses whose first returned trading date is later than the requested start trading date are rejected before normalization or cache writes, allowing manager fallback to continue.
@@ -648,6 +663,7 @@ python scripts/check_env.py --config
 ```bash
 python main.py                        # Full analysis (stocks + market review)
 python main.py --market-review        # Market review only
+python main.py --etf-rotation         # ETF rotation signal + rule backtest (no LLM; see docs/etf-rotation.md, Chinese-only)
 python main.py --no-market-review     # Stock analysis only
 python main.py --stocks 600519,300750 # Specify stocks
 python main.py --portfolio futu       # Use real Futu LONG stock holdings (overrides --stocks/STOCK_LIST)
@@ -671,7 +687,7 @@ python main.py --stocks sh000016,000016
 python main.py --stocks sh000016 --dry-run
 ```
 
-Index targets are handled with `market=cn` throughout the Pipeline for market phase, daily-bar target date, resume/checkpoint date, history window, and `DecisionSignal`. Stock-only modules (chip distribution, fundamentals, board membership, capital flow, LHB, corporate events) are centrally skipped. An unregistered `.CSI` input (e.g. `930956.CSI`) is rejected before any market-data provider request without affecting other targets in the batch. Search and reports use the registry Chinese index name and never carry machine codes.
+Index targets are handled with `market=cn` throughout the Pipeline for market phase, daily-bar target date, resume/checkpoint date, history window, and `DecisionSignal`. Stock-only modules (chip distribution, fundamentals, board membership, capital flow, LHB, corporate events) are centrally skipped. An unregistered `.CSI` input (e.g. `930956.CSI`) is rejected before any market-data provider request: the CLI `--stocks` entry and the Actions daily workflow reject the whole batch for the run (no target in the batch runs), while Web/API rejects only that target in an async batch (it enters `rejected`) or returns 4xx for a sync/single request. Search and reports use the registry Chinese index name and never carry machine codes.
 
 Indices share the A-share trading-day semantics: when the trading-day check is enabled, registered indices (`sh`/`sz` prefix or `.CSI` alias) participate in CN holiday filtering as `market=cn`, so indices are skipped on A-share holidays; a market-unknown non-index code keeps the existing fail-open behavior. `--force-run` forces execution on non-trading days.
 
@@ -683,11 +699,48 @@ Web autocomplete and search now expose registered indices: searching a registry 
 
 The API `/analyze` endpoint builds a structured `AnalysisTarget` for explicit index inputs: `sh000016` is enqueued as `asset_type=INDEX` with `canonical_id=sh000016`, and `930955.CSI`/`csi930955` converge to `csi930955`. Indices and same-digit stocks (e.g. `sh000016` vs `000016`) are deduplicated independently and never collapse. An unregistered CSI input (e.g. `930956.CSI`) returns an explicit 4xx for a single async or sync request, and in an async batch only that target enters the response `rejected` list while the rest of the batch is enqueued normally. Chinese-name inputs (e.g. `贵州茅台`) keep the existing stock-name resolution path and never enter index classification.
 
-> **Phase 2 boundary**: default `STOCK_LIST`, `--schedule`, Bot, and the GitHub Actions daily workflow do not yet expose index entrypoints; Web/API and the one-shot `--stocks` entry support indices, with Bot/scheduled/daily-workflow entries landing in later Phase 2 PRs.
+Bot `/analyze` now accepts registered-index explicit codes (`sh000016`), CSI aliases (`930955.CSI`), and registered Chinese names (`上证50`). The registry canonical and structured `AnalysisTarget` flow into the same Pipeline used by CLI/API; unregistered CSI forms, unknown names, and ambiguous registered names return an explicit error without submitting a task. Existing A/HK/US codes and stock names keep the legacy-code path.
+
+### GitHub Actions index entry (Phase 2 PR3)
+
+The GitHub Actions daily workflow (`.github/workflows/00-daily-analysis.yml`) analyzes explicit index tokens from the `STOCK_LIST` config in the same batch as stocks: when `GITHUB_ACTIONS=true`, a no-arg `python main.py` run (the `full` and `stocks-only` modes; `market-only` does not analyze the stock list and is exempt from this classification) classifies `STOCK_LIST` with the same typing rules as `--stocks`, so explicit index tokens (e.g. `sh000016`, `930955.CSI`) take the index path while stock tokens keep the existing path — no second Pipeline or capability matrix is introduced; a batch containing an unregistered `.CSI` target is rejected as a whole. The local no-arg default path (`.env`/Docker `STOCK_LIST`) and scheduled hot-reload (`--schedule`/`config.schedule_enabled`) do not participate in this classification: local `--stocks` runs do classify, but the local no-arg default path and scheduled mode construct no targets from `--stocks`, so the default `STOCK_LIST` semantics in those environments are unchanged.
+
+> **Phase 2 boundary**: `--schedule`, Bot `/ask`, and Bot `/batch` still do not expose index entrypoints. Web/API, Bot `/analyze`, the one-shot `--stocks` entry, and the GitHub Actions daily workflow support indices.
+
+### Index watchlist configuration
+
+`STOCK_LIST` accepts index targets mixed in with stocks under the following rules at two entry points: the one-shot `--stocks` argument and the GitHub Actions daily workflow (`GITHUB_ACTIONS=true` no-arg `full`/`stocks-only` runs). Local `.env`/Docker no-arg default runs do not participate in index classification; `STOCK_LIST` keeps its existing stock semantics there. To analyze indices from local `.env`/Docker, pass `--stocks` explicitly (one-shot run) or use the GitHub Actions entry. Classification runs before stock parsing: an explicit form that matches a registered index takes the `market=cn` index Pipeline; anything else continues on the stock path (`.CSI` prefixed forms excepted — see the rejection rule below). The classification happens **before normalization**, so you must write an explicit code form; bare codes are never "auto-promoted".
+
+**Recognized code forms for registered indices:**
+
+| Family | Canonical (registry identity) | Display / equivalent explicit forms | Example |
+|--------|-------------------------------|--------------------------------------|---------|
+| Shanghai (SSE / CSI series listed on SH) | `sh` + 6 digits | `{code}.SH` (plus cross-family aliases such as `sz399300` → `sh000300`) | `sh000016`, `000016.SH` (SSE 50) |
+| Shenzhen (SZSE / CNI series) | `sz` + 6 digits | `{code}.SZ` | `sz399006`, `399006.SZ` (ChiNext); `sz399365`, `399365.SZ` (CNI Grain) |
+| CSI (CSI index code ranges) | `csi` + 6 digits | `{code}.CSI` | `csi930606`, `930606.CSI` (CSI Steel); `csi930955`, `930955.CSI` (CSI Dividend Low Vol 100) |
+| US indices | not in the CN registry | bare code as-is | `NDX` (Nasdaq 100), `SPX`, `DJI` |
+
+> The full list is defined by `scripts/stock_index_seeds/index_registry.csv`; the bundled `apps/dsa-web/public/stocks.index.json` is generated from it (`python scripts/generate_index_from_csv.py --index-only`). For SH/SZ families the exchange-suffix form is equivalent to the canonical; for the `csi` family the canonical is `csi930606` and the equivalent explicit form is `930606.CSI` (both converge to the same index).
+
+**Rules with correct/incorrect examples:**
+
+- **Use a registered code in its explicit form** (prefix or exchange suffix); do not write unregistered code ranges (the whole batch is rejected, or the token is treated as a stock). Matching is case-insensitive: `930955.csi`, `CSI930955`, and `930955.CSI` are equivalent; the canonical and the explicit alias/display of the same index are equivalent (`csi930606` ≡ `930606.CSI`, `sz399365` ≡ `399365.SZ`). A wrong exchange suffix (e.g. `399365.SH`) is rejected as unsupported (that suffix does not accept that base code), while a bare 6-digit code falls back to the stock path.
+- **An unregistered `.CSI` target rejects the whole batch (only at the `--stocks` and GitHub Actions entries)**: a one-shot `--stocks` or a GitHub Actions daily-workflow `STOCK_LIST` containing an unregistered `.CSI` (e.g. `930956.CSI`, or any CSI range other than the registered ones) is rejected as a whole — none of the targets run. The local `.env`/Docker no-arg default path does not classify indices, so this whole-batch rejection does not apply there. Web/API async batches reject only that target and sync/single requests return 4xx (see the Web/API index entry section below for the rejected-list semantics). A wrong exchange suffix (e.g. `399365.SH`) is likewise rejected as unsupported.
+- **Bare codes are never auto-promoted to indices**: a bare 6-digit code such as `399365` / `930606` / `000016` is always treated on the stock path (the "bare code defaults to stock" contract stays); only an ambiguity note is logged. Note: for SZ-family indices (e.g. `sz399365`) the stock canonical and the index canonical share the same `sz{code}` prefixed form, so the same-code bare stock and the index live in the same persistence key domain — mind the fold semantics in the canonical-isolation section below when mixing them in one watchlist.
+- **For US indices such as `NDX`, the bare code is already the correct form**: they use the dedicated `us_index_mapping` US-index route; do **not** add CN prefixes/suffixes (e.g. `NDX.US`, `usNDX`), which could push them onto the stock path.
+- **ETFs (e.g. 159934 gold ETF, XOP) are not in the index registry**: they keep the stock-path ETF semantics, unrelated to any index sharing the same digits; write the bare code directly — an index prefix is neither needed nor supported.
+
+**Example `STOCK_LIST` (comma-separated):**
+
+```text
+600519,sh000016,930606.CSI,sz399365,159934,NDX
+```
+
+This mixes a stock (600519 Kweichow Moutai), an SSE index (sh000016), a CSI index (930606.CSI), an SZ index (sz399365), an A-share ETF (159934 — stock path) and a US index (NDX — US-index route). Because a batch containing an unregistered `.CSI` does not run at all, **check each index against the registry before configuring it**.
 
 ### Index vs stock Dashboard canonical isolation (PR #2312)
 
-Registered indices are persisted under their lowercase canonical identity (`sh000016` / `sz399001` / `csi930955`). History filtering, delete-by-code, counts, and the stock bar now all use the parser for asset typing, so index records and the same-code bare stock (e.g. `000016`) are strictly isolated and never collapse:
+Registered indices are persisted under their lowercase canonical identity (`sh000016` / `sz399001` / `csi930955`). History filtering, delete-by-code, counts, and the stock bar now all use the parser for asset typing, so index records and the same-code bare stock (e.g. `000016`) are strictly isolated and never collapse. Exception: for SZ-family indices (e.g. `sz399365`) the bare-stock canonical and the index canonical share the same `sz{code}` prefixed form (a bare `399365` parsed as a stock already canonicalizes to `sz399365`), so they naturally share one key; same-code bare stocks and indices in that family are outside the isolation scope and fold together when mixed in a watchlist:
 
 - **History candidates**: index queries (`sh000016`, `SH000016`, `000016.SH`, `sz399001`, `csi930955`, `930955.CSI` and other explicit forms) reach records persisted under the lowercase canonical, the legacy uppercase canonical, or an explicit alias — but **never** the bare same-code stock record; a bare query (`000016` / `930955`) likewise never reaches index records. Stock aliases, HK, and offshore markets keep their existing equivalence semantics.
 - **Delete and count**: `DELETE /api/v1/history/by-code/{code}` and history totals converge every explicit index form; a code with no records still returns `deleted=0` (no breaking 404).
@@ -1271,7 +1324,7 @@ LITELLM_FALLBACK_MODELS=anthropic/claude-sonnet-4-6,openai/gpt-5.4-mini
 
 > ⚠️ `LITELLM_MODEL` must include provider prefix (e.g. `gemini/`, `anthropic/`, `openai/`). Legacy `GEMINI_MODEL` (no prefix) is only used when `LITELLM_MODEL` is not set.
 
-**Vision model (image stock code extraction)**: See [LLM Config Guide - Vision](LLM_CONFIG_GUIDE_EN.md#41-vision-model-image-stock-code-extraction).
+**Vision model (image stock code extraction)**: See [LLM Config Guide - Vision](LLM_CONFIG_GUIDE_EN.md#advanced-feature-vision-model-config).
 
 ### Debug Mode
 
@@ -1463,7 +1516,7 @@ FastAPI provides RESTful API service for configuration management and triggering
 - **Market review history replay** - Market review results are persisted with `report_type=market_review` and can be reopened from history list/detail or Markdown endpoints directly, without re-triggering a fresh analysis run.
 - **Market-position card** - A-share stock reports show a market theme layer and a stock position layer, separating market themes, primary theme, theme phase, stock role, and missing evidence.
 - **Input data-block visibility** - Regular analysis reports expose a low-sensitivity `AnalysisContextPack` overview through history details, sync responses, and completed task status; the Web report page shows the data-block summary collapsed after Strategy and News, with block status, source, missing reasons, and fallback summaries available on expansion.
-- **Ask-stock follow-up context** - When Ask Stock is opened from a historical report, follow-up messages keep sending the active `stock_code/stock_name`; reopening an existing chat can recover the base stock from loaded user messages, and comparison-style prompts do not overwrite the current stock context.
+- **Ask-stock discussion object** - The server saves an accepted explicit code or a unique indexed name. Follow-ups, reloads, reopening and session switches restore server state. Explicit switches change the main object; comparisons only expand the current turn's scope, and an initial comparison does not select a main object. A report link is a hint, not confirmation. Execution failure or stopping does not undo accepted state.
 - **Backtest Validation** - Evaluate historical analysis accuracy, query direction win rate and simulated returns
 - **API Documentation** - Visit `/docs` for Swagger UI
 
@@ -1532,9 +1585,9 @@ For this feature, the product behavior is:
 > Note: `GET /api/v1/usage/dashboard` reuses the existing `llm_usage` audit table and adds no configuration key or database migration. It returns only persisted call counts, prompt/completion/total token aggregates, model-level usage, and recent call records; it does not infer model context windows or provider metadata.
 > Issue #1520 compatibility note: The `model`/`model_used` returned here is read-only historical snapshot metadata from each record, used only for trend drawer/history display. It does not alter runtime model/model-provider/base URL resolution, config migration, or cleanup semantics in the analysis path. Rollback is by reverting this commit; history query, API response shapes, and UI drawer consumption remain compatible.
 > Note: history detail, sync analysis responses, and completed task status responses expose a low-sensitivity input data-block overview at `report.details.analysis_context_pack_overview`; sync analysis responses depend on the just-persisted `analysis_history.context_snapshot`, so new records do not guarantee the overview when `SAVE_CONTEXT_SNAPSHOT=false`. `details.context_snapshot` strips that top-level field and does not return the full `AnalysisContextPack` or prompt summary.
-> Note: `POST /api/v1/agent/chat` and `POST /api/v1/agent/chat/stream` use the frontend-provided `context.stock_code` as the active Ask Stock baseline and fall back to global `REPORT_LANGUAGE` when `context.report_language` is absent; an explicitly supplied `context.report_language` keeps precedence. Stock scope is still resolved server-side. Each turn is classified as `maintain`, `switch`, or `compare`: unchanged follow-ups can call stock-scoped tools only for the current stock; explicit switches clear stale stock summaries and prefetched context; comparison prompts such as compare/vs/difference allow the explicitly mentioned codes for that turn without rewriting the current stock. If a model attempts to call a stock tool with financial abbreviations such as TTM, PE, MACD, KDJ, contextual indicator tokens such as `MA` in moving-average prompts, or exchange fragments such as SH/SZ/BJ/HK/SS, the backend returns a non-retriable `stock_scope_violation` tool result instead of executing that stock tool. Tool names are resolved only by exact registry name; provider namespaces or suffixes are not routed to existing tools.
+> Chat state: `POST /api/v1/agent/chat` and `/chat/stream` use the server session snapshot, not `context.stock_code` as fact. Report hints are reused only when canonical identity and stock/index type agree. Detail, accepted and non-stream responses expose `active_stock_context` (code/name/canonical/type), `session_state_version` and `session_generation`. One acceptance transaction saves the message, explicit Skills and object; execution consumes that snapshot and never writes the object back. Explicit switches remove stale attached data; comparisons only expand the explicitly confirmed turn scope. The real scope guard still rejects financial abbreviations/exchange fragments as stock parameters; tool names still require exact registry matches. General strategy questions without an object use an empty stock scope, while ambiguous/unconfirmed switches receive clarification. Explicit `context.report_language` still precedes global `REPORT_LANGUAGE`. Requests may include their known generation; conflicts return SSE `session_state_conflict` or non-stream HTTP 409. Refresh and retry manually, without automatic resend. With all new state fields absent (old API), Web shows unconfirmed instead of guessing from text; partial fields are protocol errors. See [session state and upgrades](LLM_CONFIG_GUIDE_EN.md#chat-session-state-and-upgrades) for legacy recovery and non-destructive rollback/re-upgrade.
 
-> Session Skill state: the top-level `skills` field is tri-state on both Chat requests and is the only authoritative request source for Skill selection. Omitting it or sending `null` inherits the selection saved for that `session_id`; sessions without state use the runtime server default. Sending `[]` clears the explicit selection and preserves the existing general/server-default execution semantics. A non-empty list is cleaned, deduplicated, and saved with the existing Skill catalog rules. Mixed valid and invalid entries keep the valid entries; if every entry is invalid, the normalized empty result is not treated as an explicit `[]`, so the request inherits session state or the runtime default without persisting an empty state. Any legacy `skills` or `strategies` fields left in the analysis-reuse `context` are removed by the server and cannot override the top-level tri-state or session state. The user message and an explicit Skill update are written in one transaction before the streaming endpoint emits `accepted`. `GET /api/v1/agent/chat/sessions/{session_id}` returns `session_state.selected_skill_ids` alongside messages: `null` means no state has been persisted, `[]` means the selection was explicitly cleared, and a non-empty list is the saved selection. The Web client restores only persisted selections from this field. For `null`, it may display the server default Skill, but an untouched follow-up still omits `skills` so a legacy session is not silently converted into an explicit-Skill session. Deleting a session also deletes its state.
+> Session Skills: top-level `skills` is the sole request selection source. Omitted/null inherits saved choices, using runtime configuration defaults when unset. Explicit `[]` saves a cleared selection and uses built-in defaults, not a non-empty configured selection. Non-empty lists use existing catalog validation/deduplication; mixed entries retain valid ones, while all-invalid lists inherit without saving empty state. Legacy `context.skills/strategies` are removed. One acceptance transaction saves the message, explicit Skills and object before accepted. Detail's `session_state.selected_skill_ids` distinguishes unset `null`, cleared `[]` and saved lists. Web separates saved state from drafts: untouched follow-ups omit selection, and conflicts never promote drafts to saved choices. Session deletion also removes state.
 > Note: `POST /api/v1/backtest/run` adds `analysis_date_from` / `analysis_date_to` (`YYYY-MM-DD`) to filter candidates by analysis date range. When `analysis_date_from > analysis_date_to`, it returns 400 `invalid_params`.
 > Note: When backtest runs successfully but yields no new persisted rows, `BacktestRunResponse.message` carries a readable diagnostic and `diagnostics` returns troubleshooting context (for example `empty_reason`, `analysis_date_from`, `analysis_date_to`, `eval_window_days`, `min_age_days`, `limit`).
 > Note: `GET /api/v1/backtest/results`, `GET /api/v1/backtest/performance`, and `GET /api/v1/backtest/performance/{code}` all support `analysis_date_from` and `analysis_date_to` consistently. Omitting them keeps historical default behavior.
